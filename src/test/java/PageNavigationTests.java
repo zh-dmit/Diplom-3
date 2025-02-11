@@ -12,15 +12,16 @@ public class PageNavigationTests extends BaseTestCase {
 
     MainPageObject mainPageObject = new MainPageObject(driver);
     LoginPageObject loginPageObject = new LoginPageObject(driver);
-    UserActionPrepare userActionPrepare = new UserActionPrepare();
+    UserActionPrepare userActionPrepare = new UserActionPrepare(stellarburgersApi);
     ProfilePageObject profilePageObject = new ProfilePageObject(driver);
 
     @Before
     public void preparationOfConditions() {
+        stellarburgersApi.generateUserData();
         userActionPrepare.createUserIfNonExists();
         mainPageObject.logInButtonClick();
-        loginPageObject.emailFieldSendEmail(userEmail);
-        loginPageObject.passwordFieldSendPassword(userPassword);
+        loginPageObject.emailFieldSendEmail(stellarburgersApi.getUserEmail());
+        loginPageObject.passwordFieldSendPassword(stellarburgersApi.getUserPassword());
         loginPageObject.signInButtonClick();
         mainPageObject.placeAnOrderIsDisplayed();
     }
@@ -28,13 +29,13 @@ public class PageNavigationTests extends BaseTestCase {
     @Test
     public void navigateToPersonalAccount() {
         mainPageObject.profileButtonClick();
-        profilePageObject.emailFieldIsDisplayed(userEmail);
+        profilePageObject.emailFieldIsDisplayed(stellarburgersApi.getUserEmail());
     }
 
     @Test
     public void navigateToConstructorFromPersonalAccount() {
         mainPageObject.profileButtonClick();
-        profilePageObject.emailFieldIsDisplayed(userEmail);
+        profilePageObject.emailFieldIsDisplayed(stellarburgersApi.getUserName());
         profilePageObject.constructorButtonClick();
 
         assertEquals("https://stellarburgers.nomoreparties.site/", driver.getCurrentUrl());
@@ -43,14 +44,14 @@ public class PageNavigationTests extends BaseTestCase {
     @Test
     public void navigateToLogoButtonFromPersonalAccount() {
         mainPageObject.profileButtonClick();
-        profilePageObject.emailFieldIsDisplayed(userEmail);
+        profilePageObject.emailFieldIsDisplayed(stellarburgersApi.getUserEmail());
         profilePageObject.logoButtonClick();
 
         assertEquals("https://stellarburgers.nomoreparties.site/", driver.getCurrentUrl());
     }
 
     @After
-    public void deleteUser() {
+    public void dataCleaning() {
         userActionPrepare.deleteUserIfExists();
     }
 }

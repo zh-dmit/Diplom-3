@@ -13,10 +13,11 @@ public class RegistrationTests extends BaseTestCase {
     MainPageObject mainPageObject = new MainPageObject(driver);
     LoginPageObject loginPageObject = new LoginPageObject(driver);
     RegisterPageObject registerPageObject = new RegisterPageObject(driver);
-    UserActionPrepare userActionPrepare = new UserActionPrepare();
+    UserActionPrepare userActionPrepare = new UserActionPrepare(stellarburgersApi);
 
     @Before
-    public void deleteUser() {
+    public void preparationOfConditions() {
+        stellarburgersApi.generateUserData();
         userActionPrepare.deleteUserIfExists();
     }
 
@@ -24,9 +25,9 @@ public class RegistrationTests extends BaseTestCase {
     public void registerUser() {
         mainPageObject.logInButtonClick();
         loginPageObject.registerButtonClick();
-        registerPageObject.nameFieldSendName(userName);
-        registerPageObject.emailFieldSendEmail(userEmail);
-        registerPageObject.passwordFieldSendPassword(userPassword);
+        registerPageObject.nameFieldSendName(stellarburgersApi.getUserName());
+        registerPageObject.emailFieldSendEmail(stellarburgersApi.getUserEmail());
+        registerPageObject.passwordFieldSendPassword(stellarburgersApi.getUserPassword());
         registerPageObject.registerButtonClick();
         loginPageObject.signInButtonIsDisplayed();
 
@@ -37,10 +38,15 @@ public class RegistrationTests extends BaseTestCase {
     public void registerUserIncorrectPassword() {
         mainPageObject.logInButtonClick();
         loginPageObject.registerButtonClick();
-        registerPageObject.nameFieldSendName(userName);
-        registerPageObject.emailFieldSendEmail(userEmail);
-        registerPageObject.passwordFieldSendPassword(userWrongPassword);
+        registerPageObject.nameFieldSendName(stellarburgersApi.getUserName());
+        registerPageObject.emailFieldSendEmail(stellarburgersApi.getUserEmail());
+        registerPageObject.passwordFieldSendPassword(stellarburgersApi.getUserWrongPassword());
         registerPageObject.registerButtonClick();
         registerPageObject.incorrectPasswordIsDisplayed();
+    }
+
+    @After
+    public void dataCleaning() {
+        userActionPrepare.deleteUserIfExists();
     }
 }

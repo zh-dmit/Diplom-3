@@ -10,15 +10,16 @@ public class SignOutTests extends BaseTestCase {
 
     MainPageObject mainPageObject = new MainPageObject(driver);
     LoginPageObject loginPageObject = new LoginPageObject(driver);
-    UserActionPrepare userActionPrepare = new UserActionPrepare();
+    UserActionPrepare userActionPrepare = new UserActionPrepare(stellarburgersApi);
     ProfilePageObject profilePageObject = new ProfilePageObject(driver);
 
     @Before
-    public void createUser() {
+    public void preparationOfConditions() {
+        stellarburgersApi.generateUserData();
         userActionPrepare.createUserIfNonExists();
         mainPageObject.logInButtonClick();
-        loginPageObject.emailFieldSendEmail(userEmail);
-        loginPageObject.passwordFieldSendPassword(userPassword);
+        loginPageObject.emailFieldSendEmail(stellarburgersApi.getUserEmail());
+        loginPageObject.passwordFieldSendPassword(stellarburgersApi.getUserPassword());
         loginPageObject.signInButtonClick();
         mainPageObject.placeAnOrderIsDisplayed();
     }
@@ -31,7 +32,7 @@ public class SignOutTests extends BaseTestCase {
     }
 
     @After
-    public void deleteUser() {
+    public void dataCleaning() {
         userActionPrepare.deleteUserIfExists();
     }
 }

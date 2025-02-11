@@ -2,21 +2,22 @@ import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import practicum.api.StellarburgersApi;
 
 import java.time.Duration;
 
 public class BaseTestCase {
-    protected WebDriver driver;
-    private final String testURL = "https://stellarburgers.nomoreparties.site/";
-    protected String userEmail = "testdmit@test.com";
-    protected String userPassword = "123456";
-    protected String userWrongPassword = "12345";
-    protected String userName = "testdmituser";
-    protected String yandexDriverPath = "C:/Users/User/yandexdriver.exe";
 
+    protected WebDriver driver;
+    protected StellarburgersApi stellarburgersApi = new StellarburgersApi();
+    private final String testURL = "https://stellarburgers.nomoreparties.site/";
+    protected String yandexDriverPath = System.getenv("YANDEX_DRIVER_PATH");
 
 
     public BaseTestCase() {
+        if (yandexDriverPath == null || yandexDriverPath.isEmpty()) {
+            throw new RuntimeException("Environment variable YANDEX_DRIVER_PATH is not set");
+        }
         System.setProperty("webdriver.chrome.driver", yandexDriverPath);
         driver = new ChromeDriver();
         driver.get(testURL);

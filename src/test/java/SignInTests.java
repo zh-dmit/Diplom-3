@@ -12,21 +12,22 @@ import static org.junit.Assert.assertEquals;
 public class SignInTests extends BaseTestCase {
 
     MainPageObject mainPageObject = new MainPageObject(driver);
-    UserActionPrepare userActionPrepare = new UserActionPrepare();
+    UserActionPrepare userActionPrepare = new UserActionPrepare(stellarburgersApi);
     LoginPageObject loginPageObject = new LoginPageObject(driver);
     RegisterPageObject registerPageObject = new RegisterPageObject(driver);
     ForgotPasswordPageObject forgotPasswordPageObject = new ForgotPasswordPageObject(driver);
 
     @Before
-    public void createUser() {
+    public void preparationOfConditions() {
+        stellarburgersApi.generateUserData();
         userActionPrepare.createUserIfNonExists();
     }
 
     @Test
     public void signInMainPageLogInButton() {
         mainPageObject.logInButtonClick();
-        loginPageObject.emailFieldSendEmail(userEmail);
-        loginPageObject.passwordFieldSendPassword(userPassword);
+        loginPageObject.emailFieldSendEmail(stellarburgersApi.getUserEmail());
+        loginPageObject.passwordFieldSendPassword(stellarburgersApi.getUserPassword());
         loginPageObject.signInButtonClick();
         mainPageObject.placeAnOrderIsDisplayed();
 
@@ -36,8 +37,8 @@ public class SignInTests extends BaseTestCase {
     @Test
     public void signInMainPageProfileButton() {
         mainPageObject.profileButtonClick();
-        loginPageObject.emailFieldSendEmail(userEmail);
-        loginPageObject.passwordFieldSendPassword(userPassword);
+        loginPageObject.emailFieldSendEmail(stellarburgersApi.getUserEmail());
+        loginPageObject.passwordFieldSendPassword(stellarburgersApi.getUserPassword());
         loginPageObject.signInButtonClick();
         mainPageObject.placeAnOrderIsDisplayed();
 
@@ -49,8 +50,8 @@ public class SignInTests extends BaseTestCase {
         mainPageObject.logInButtonClick();
         loginPageObject.registerButtonClick();
         registerPageObject.signInButtonClick();
-        loginPageObject.emailFieldSendEmail(userEmail);
-        loginPageObject.passwordFieldSendPassword(userPassword);
+        loginPageObject.emailFieldSendEmail(stellarburgersApi.getUserEmail());
+        loginPageObject.passwordFieldSendPassword(stellarburgersApi.getUserPassword());
         loginPageObject.signInButtonClick();
         mainPageObject.placeAnOrderIsDisplayed();
 
@@ -62,8 +63,8 @@ public class SignInTests extends BaseTestCase {
         mainPageObject.logInButtonClick();
         loginPageObject.restorePasswordClick();
         forgotPasswordPageObject.signInButtonClick();
-        loginPageObject.emailFieldSendEmail(userEmail);
-        loginPageObject.passwordFieldSendPassword(userPassword);
+        loginPageObject.emailFieldSendEmail(stellarburgersApi.getUserEmail());
+        loginPageObject.passwordFieldSendPassword(stellarburgersApi.getUserPassword());
         loginPageObject.signInButtonClick();
         mainPageObject.placeAnOrderIsDisplayed();
 
@@ -71,7 +72,7 @@ public class SignInTests extends BaseTestCase {
     }
 
     @After
-    public void deleteUser() {
+    public void dataCleaning() {
         userActionPrepare.deleteUserIfExists();
     }
 }

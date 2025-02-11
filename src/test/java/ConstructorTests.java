@@ -1,4 +1,3 @@
-import io.qameta.allure.Step;
 import org.junit.Test;
 import practicum.pages.MainPageObject;
 
